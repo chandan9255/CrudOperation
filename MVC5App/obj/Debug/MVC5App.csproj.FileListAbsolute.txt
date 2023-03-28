@@ -72,8 +72,12 @@ D:\TestProject\mvcapplication\MVC5App\MVC5App\bin\System.Web.WebPages.Razor.xml
 D:\TestProject\mvcapplication\MVC5App\MVC5App\bin\Newtonsoft.Json.xml
 D:\TestProject\mvcapplication\MVC5App\MVC5App\bin\Antlr3.Runtime.pdb
 D:\TestProject\mvcapplication\MVC5App\MVC5App\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-D:\TestProject\mvcapplication\MVC5App\MVC5App\obj\Debug\MVC5App.csproj.AssemblyReference.cache
 D:\TestProject\mvcapplication\MVC5App\MVC5App\obj\Debug\MVC5App.csproj.CoreCompileInputs.cache
 D:\TestProject\mvcapplication\MVC5App\MVC5App\obj\Debug\MVC5App.csproj.CopyComplete
 D:\TestProject\mvcapplication\MVC5App\MVC5App\obj\Debug\MVC5App.dll
 D:\TestProject\mvcapplication\MVC5App\MVC5App\obj\Debug\MVC5App.pdb
+D:\TestProject\mvcapplication\MVC5App\MVC5App\bin\EntityFramework.dll
+D:\TestProject\mvcapplication\MVC5App\MVC5App\bin\EntityFramework.SqlServer.dll
+D:\TestProject\mvcapplication\MVC5App\MVC5App\bin\EntityFramework.xml
+D:\TestProject\mvcapplication\MVC5App\MVC5App\bin\EntityFramework.SqlServer.xml
+D:\TestProject\mvcapplication\MVC5App\MVC5App\obj\Debug\MVC5App.csproj.AssemblyReference.cache

@@ -1,31 +1,153 @@
-﻿@{
-    ViewBag.Title = "Home Page";
-}
+﻿@model MVC5App.Models.StudentModel
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+
+
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<div class="container" style="margin-top:3%">
+    <a href="#" class="btn btn-info" onclick="AddNewStudent()">Add New Student</a> <br /><br />
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Student Name</th>
+                <th>Roll No</th>
+                <th>Department</th>
+                <th>Action(Edit)</th>
+                <th>Action(Delete)</th>
+
+            </tr>
+        </thead>
+        <tbody id="SetStudentList">
+            <tr id="LoadingStatus" style="color:red"></tr>
+        </tbody>
+    </table>
+
+    <div class="modal fade" id="MyModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h4 id="ModalTitle"></h4>
+                </div>
+                <div class="modal-body">
+                    <form id="form">
+                        <fieldset id="SubmitForm">
+                            @Html.HiddenFor(m => m.StudentId, new { @id = "StuId" })
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.Name, new { @id = "StuName", @class = "form-control", @placeholder = "Name*" })
+                            </div>
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.Roll_NO, new { @id = "RollNo", @class = "form-control", @placeholder = "Roll Number*" })
+                            </div>
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.Department, new { @id = "Dep", @class = "form-control", @placeholder = "Department*" })
+
+                            </div>
+                            <div class="form-group">
+                                <a href="#" class="btn btn-block btn-danger" id="SaveStudentRecord">Save</a>
+                            </div>
+
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+<div class="modal fade" id="DeleteConfirmation">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4>Delete Student Record</h4>
+            </div>
+            <div class="modal-body">
+                <h4>Are You Sure? You Want To Delete This Record.</h4>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-primary" data-dismiss="modal" id="r">Cancle</a>
+                <a href="#" class="btn btn-danger" onclick="ConfirmDelete()">Confirm</a>
+            </div>
+        </div>
     </div>
 </div>
+</div>
+
+<script>
+    $("#LoadingStatus").html("Loading....");
+    $.get("/Home/GetStudentList", null, DataBind);
+    function DataBind(StudentList) {
+        var setData = $("#SetStudentList");
+        for (var i = 0; i < StudentList.length; i++) {
+            var Data = "<tr class='row_" + StudentList[i].StudentId + "'>" +
+                "<td>" + StudentList[i].StudentId + "</td>" +
+                "<td>" + StudentList[i].Name + "</td>" +
+                "<td>" + StudentList[i].Roll_NO + "</td>" +
+                "<td>" + StudentList[i].Department + "</td>" +
+                "<td>" + "<a href='#' class='btn btn-warning' onclick='EditStudentRecord(" + StudentList[i].StudentId + ")' ><span class='glyphicon glyphicon-edit'></span></a>" + "</td>" +
+                "<td>" + "<a href='#' class='btn btn-danger' onclick='DeleteStudentRecord(" + StudentList[i].StudentId + ")'><span class='glyphicon glyphicon-trash'></span></a>" + "</td>" +
+                "</tr>";
+            setData.append(Data);
+            $("#LoadingStatus").html(" ");
+        }
+    }
+
+    function AddNewStudent(StudentId) {
+        $("#form")[0].reset();
+        $("ModalTitle").html("Add New Student");
+        $("#MyModal").modal();
+    }
+
+    function EditStudentRecord(StudentId) {
+        debugger;
+        var url = "/Home/GetStudentById?StudentId=" + StudentId;
+        $("#ModalTitle").html("Update Student Record");
+        $("#MyModal").modal();
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function (data) {
+                var obj = JSON.parse(data);
+                $("#StuId").val(obj.StudentId);
+                $("#StuName").val(obj.Name);
+                $("#RollNo").val(obj.Roll_NO);
+                $("#Dep").val(obj.Department);
+
+            }
+        })
+    }
+
+    $("#SaveStudentRecord").click(function () {
+        var data = $("#SubmitForm").serialize();
+        $.ajax({
+            type: "Post",
+            url: "/Home/SaveDataInDatabase",
+            data: data,
+            success: function (result) {
+                alert("Success!..");
+                window.location.href = "/Home/index";
+                $("#MyModal").modal("hide");
+            }
+        })
+    })
+
+    var DeleteStudentRecord = function (StudentId) {
+        debugger;
+        $("#StuId").val(StudentId);
+        $("#DeleteConfirmation").modal("show");
+    }
+    var ConfirmDelete = function () {
+        var StuId = $("#StuId").val();
+        $.ajax({
+            type: "POST",
+            url: "/Home/DeleteStudentRecord?StudentId=" + StuId,
+            success: function (result) {
+                $("#DeleteConfirmation").modal("hide");
+                $(".row_" + StuId).remove();
+            }
+        })
+    }
+</script>
